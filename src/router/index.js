@@ -6,7 +6,7 @@ import Pricing from "../pages/Pricing";
 
 const router = new VueRouter({
   routes: [
-    { path: "", name: "home", component: Home },
+    { path: "/", name: "home", component: Home },
     { path: "/about", name: "About", component: About, meta: { auth: true } },
     { path: "/blog", name: "blog", component: Blog, meta: { auth: true } },
     {

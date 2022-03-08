@@ -13,14 +13,23 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
+// import router from "../router/";
 export default {
   name: "Congratulation",
   computed: {
     ...mapGetters(["getEmail"]),
   },
   methods: {
-    ...mapActions(["logout"]),
+    // ...mapActions(["logout"]),
+    logout() {
+      this.$store.commit("updateTkn", null);
+      localStorage.removeItem("tkn");
+      this.$store.commit("updateMail", null);
+      localStorage.removeItem("email");
+
+      this.$router.push("/").catch(()=>{});
+    },
   },
 };
 </script>

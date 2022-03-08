@@ -17,7 +17,7 @@
             class="input__actions"
           />
         </div>
-        <span class="err">{{ errors[0] }}</span>
+        <span class="err" :key="errors[0]">{{ errors[0] }}</span>
       </ValidationProvider>
       <ValidationProvider
         class="input"
@@ -35,7 +35,7 @@
             id="password"
           />
         </div>
-        <span class="err">{{ errors[0] }}</span>
+        <span class="err" :key="errors[0]">{{ errors[0] }}</span>
       </ValidationProvider>
       <button
         class="btn login"
@@ -50,7 +50,7 @@
         class="btn signup"
         type="submit"
         :disabled="invalid"
-        @click="regist"
+        @click="registration"
         v-else
       >
         Sign Up
@@ -60,7 +60,8 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import axios from "axios";
+// import { mapActions } from "vuex";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 
 export default {
@@ -79,20 +80,38 @@ export default {
   },
   components: { ValidationObserver, ValidationProvider },
   methods: {
-    ...mapActions(["registration", "login"]),
-    regist() {
-      const payload = {
-        email: this.testData,
-        password: this.testPass,
-      };
-      this.registration(payload);
+    // ...mapActions(["registration", "login"]),
+    async registration() {
+      try {
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.VUE_APP_FB_KEY}`;
+        const { data } = await axios.post(url, {
+          email: this.testData,
+          password: this.testPass,
+          returnSecureToken: true,
+        });
+        this.$store.commit("updateTkn", data.idToken);
+        this.$store.commit("updateMail", data.email);
+        localStorage.setItem("tkn", data.idToken);
+        localStorage.setItem("email", data.email);
+      } catch (e) {
+        alert(e.response.data.error.message);
+      }
     },
-    onLogin() {
-      const payload = {
-        email: this.testData,
-        password: this.testPass,
-      };
-      this.login(payload);
+    async onLogin() {
+      try {
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.VUE_APP_FB_KEY}`;
+        const { data } = await axios.post(url, {
+          email: this.testData,
+          password: this.testPass,
+          returnSecureToken: true,
+        });
+        this.$store.commit("updateTkn", data.idToken);
+        this.$store.commit("updateMail", data.email);
+        localStorage.setItem("tkn", data.idToken);
+        localStorage.setItem("email", data.email);
+      } catch (e) {
+        alert(e.response.data.error.message);
+      }
     },
   },
 };

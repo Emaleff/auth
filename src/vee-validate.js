@@ -10,9 +10,9 @@ extend("email", email);
 localize({
   en: {
     messages: {
-      required: "Обязательное поле",
-      email: "Неправильно введен email",
-      min: "Пароль не может быть меньше {length} символов",
+      required: "required",
+      email: "invalid email",
+      min: "min {length} symbol",
       max: (_, { length }) =>
         `this field must have no more than ${length} characters`,
     },
